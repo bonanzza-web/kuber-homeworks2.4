@@ -192,6 +192,11 @@ ubuntu@server-kube:~$ micro config view --minify | grep -i '\- name'
 
 Также в вывод добавил microk8s enable rbac, т.к. без этого аддона ограничение прав не работает, пользователю netology были доступны все команды.    
 
+### Манифесты:
+
+[Deploy nginx](https://github.com/bonanzza-web/kuber-homeworks2.4/blob/main/files/deploy.yaml)     
+[Role](https://github.com/bonanzza-web/kuber-homeworks2.4/blob/main/files/role.yaml)     
+[Rolebinding](https://github.com/bonanzza-web/kuber-homeworks2.4/blob/main/files/rolebind.yaml)     
 ------
 
 ### Правила приёма работы
