@@ -1,0 +1,2 @@
+[hosts]
+main.server-kube ansible_host=158.160.122.175

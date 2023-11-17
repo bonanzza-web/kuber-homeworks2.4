@@ -1,0 +1,57 @@
+---
+- name: Install Microk8s ande kubectl on ubuntu
+  hosts: all
+  become: true
+  remote_user: ubuntu
+
+  tasks:
+  - name: Install microk8s
+    ansible.builtin.command: sudo snap install microk8s --classic --channel=1.28
+
+  - name: Create .kube
+    ansible.builtin.file:
+      path: /home/ubuntu/.kube
+      state: directory
+      mode: '0755'
+
+  - name: Install kubectl
+    ansible.builtin.shell: |
+      curl -LO https://dl.k8s.io/release/`curl -LS https://dl.k8s.io/release/stable.txt`/bin/linux/amd64/kubectl
+      chmod +x ./kubectl
+      sudo mv ./kubectl /usr/local/bin/kubectl
+    args:
+      executable: /bin/bash
+
+  - name: Join the group
+    ansible.builtin.user:
+      name: ubuntu
+      group: microk8s
+  - name: Chown kube
+    ansible.builtin.file:
+      path: /home/ubuntu/.kube
+      owner: ubuntu
+
+  # - name: Copy files
+  #   ansible.builtin.copy:
+  #     src: "{{ item.src }}"
+  #     dest: "{{ item.dest }}"
+  #   with_items:
+  #     - { src: "files/deploy.yaml", dest: "/home/ubuntu/deploy.yaml" }
+  #     - { src: "files/pv.yaml", dest: "/home/ubuntu/pv.yaml" }
+  #     - { src: "files/pvc.yaml", dest: "/home/ubuntu/pvc.yaml" }
+
+  # - name: Add pause
+  #   ansible.builtin.pause:
+  #     seconds: 90
+
+  # - name: Apply deployment
+  #   ansible.builtin.shell: |
+  #     microk8s kubectl apply -f /home/ubuntu/deploy.yaml
+  #     microk8s kubectl apply -f /home/ubuntu/pv.yaml
+  #     microk8s kubectl apply -f /home/ubuntu/pvc.yaml
+
+  - name: Add alias
+    ansible.builtin.lineinfile:
+      path: /home/ubuntu/.bashrc
+      line: 'alias micro="microk8s kubectl"'
+      state: present
